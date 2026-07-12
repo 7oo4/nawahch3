@@ -39,6 +39,7 @@
       place-items:center;
       padding:14px;
       overflow-x:hidden;
+      overscroll-behavior-y:contain;
     }
 
     body::before{
@@ -118,10 +119,21 @@
         var(--paper);
       border:1px solid rgba(255,255,255,.08);
       border-radius:16px;
-      touch-action:none;
+      touch-action:none !important;
+      -ms-touch-action:none;
       user-select:none;
       -webkit-user-select:none;
+      -webkit-touch-callout:none;
+      overscroll-behavior:none;
       overflow:hidden;
+    }
+
+    #board,
+    #board *{
+      touch-action:none !important;
+      -ms-touch-action:none;
+      -webkit-user-select:none;
+      user-select:none;
     }
 
     .paper-rule{
@@ -467,6 +479,15 @@
           setMessage("لم يطابق الرسم شكل الحرف S بالشكل الكافي بعد. حاول مرة أخرى.", "bad");
         }
       }
+
+      // Prevent the page from scrolling while the user draws on mobile.
+      const preventBoardScroll = event => {
+        event.preventDefault();
+      };
+
+      board.addEventListener("touchstart", preventBoardScroll, { passive: false });
+      board.addEventListener("touchmove", preventBoardScroll, { passive: false });
+      board.addEventListener("gesturestart", preventBoardScroll, { passive: false });
 
       board.addEventListener("pointerdown", event => {
         if (drawing) return;
